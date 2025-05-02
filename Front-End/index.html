@@ -1,1 +1,57 @@
- <!--test-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Job Matcher</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Job Matcher</h1>
+    <p>Enter the role details, upload candidate resumes, and get the best match.</p>
+  </header>
+
+  <main>
+    <form id="matcher-form">
+      <div class="field">
+        <label for="role">Job Role</label>
+        <input type="text" id="role" name="role" required />
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="qualifications">Qualifications</label>
+        <textarea id="qualifications" name="qualifications" rows="3"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="preferences">Preferences</label>
+        <textarea id="preferences" name="preferences" rows="3"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="resumes">Upload Resumes (PDF)</label>
+        <input type="file" id="resumes" name="resumes" accept="application/pdf" multiple />
+      </div>
+
+      <button type="submit">Find Best Match</button>
+    </form>
+
+    <section id="results" hidden>
+      <h2>Best Match</h2>
+      <p><strong>Score:</strong> <span id="result-score"></span></p>
+      <p><strong>Why:</strong> <span id="result-reason"></span></p>
+      <p>
+        <strong>Resume:</strong>
+        <a id="result-resume-link" href="#" target="_blank">Download PDF</a>
+      </p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

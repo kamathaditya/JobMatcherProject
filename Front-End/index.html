@@ -2,54 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Job Matcher</title>
+  <title>AI Resume Matcher</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Job Matcher</h1>
-    <p>Enter the role details, upload candidate resumes, and get the best match.</p>
-  </header>
-
   <main>
-    <form id="matcher-form">
-      <div class="field">
-        <label for="role">Job Role</label>
-        <input type="text" id="role" name="role" required />
-      </div>
+    <h1>Find the Best Candidate</h1>
 
-      <div class="field">
-        <label for="description">Description</label>
-        <textarea id="description" name="description" rows="4" required></textarea>
-      </div>
+    <!-- ─────────── Job form ─────────── -->
+    <form id="job-form">
+      <label>
+        Job Title
+        <input type="text" name="role" required />
+      </label>
 
-      <div class="field">
-        <label for="qualifications">Qualifications</label>
-        <textarea id="qualifications" name="qualifications" rows="3"></textarea>
-      </div>
+      <label>
+        Description
+        <textarea name="description" rows="4" required></textarea>
+      </label>
 
-      <div class="field">
-        <label for="preferences">Preferences</label>
-        <textarea id="preferences" name="preferences" rows="3"></textarea>
-      </div>
+      <label>
+        Qualifications (one per line)
+        <textarea name="qualifications" rows="3"></textarea>
+      </label>
 
-      <div class="field">
-        <label for="resumes">Upload Resumes (PDF)</label>
-        <input type="file" id="resumes" name="resumes" accept="application/pdf" multiple />
-      </div>
+      <label>
+        Preferences (one per line)
+        <textarea name="preferences" rows="3"></textarea>
+      </label>
 
-      <button type="submit">Find Best Match</button>
+      <label class="file-label">
+        Résumé PDFs
+        <input type="file" id="resumes" name="resumes" accept=".pdf" multiple required />
+      </label>
+
+      <button type="submit" id="submit-btn">Find Best Match</button>
     </form>
 
-    <section id="results" hidden>
-      <h2>Best Match</h2>
-      <p><strong>Score:</strong> <span id="result-score"></span></p>
-      <p><strong>Why:</strong> <span id="result-reason"></span></p>
-      <p>
-        <strong>Resume:</strong>
-        <a id="result-resume-link" href="#" target="_blank">Download PDF</a>
-      </p>
+    <!-- ─────────── Result panel ─────────── -->
+    <section id="result" hidden>
+      <h2>Top Recommendation</h2>
+      <p><strong>Candidate:</strong> <span id="result-candidate"></span></p>
+      <p><strong>Fit Score:</strong> <span id="result-score"></span>/10</p>
+      <p><strong>Why?</strong> <span id="result-reason"></span></p>
+      <a id="result-resume-link" href="#" download>Download résumé</a>
     </section>
+
+    <div id="error" hidden></div>
   </main>
 
   <script src="script.js"></script>

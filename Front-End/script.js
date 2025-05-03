@@ -1,52 +1,54 @@
-document.getElementById('matcher-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-  
-    // 1) Build FormData
-    const form = e.target;
-    const data = new FormData();
-    data.append('role', form.role.value);
-    data.append('description', form.description.value);
-    data.append('qualifications', form.qualifications.value);
-    data.append('preferences', form.preferences.value);
-  
-    // append each uploaded PDF
-    const files = form.resumes.files;
-    for (let i = 0; i < files.length; i++) {
-      data.append('resumes', files[i], files[i].name);
-    }
-  
-    // 2) Send to backend
-    try {
-      const resp = await fetch('/api/match', {
-        method: 'POST',
-        body: data
-      });
-  
-      if (!resp.ok) throw new Error(`Server error: ${resp.status}`);
-  
-      // 3) Parse JSON response
-      //
-      // Expect something like:
-      // {
-      //   "score": 87,
-      //   "reason": "Close match on skills A, B, and C",
-      //   "resumeUrl": "/downloads/best-candidate.pdf",
-      //   "resumeName": "Alice_Smith.pdf"
-      // }
-      const result = await resp.json();
-  
-      // 4) Populate and show results
-      document.getElementById('result-score').textContent = result.score;
-      document.getElementById('result-reason').textContent = result.reason;
-  
-      const link = document.getElementById('result-resume-link');
-      link.textContent = result.resumeName || 'Download';
-      link.href = result.resumeUrl;
-  
-      document.getElementById('results').hidden = false;
-  
-    } catch (err) {
-      alert('Something went wrong: ' + err.message);
-    }
-  });
-  
+/* Front-End/script.js
+   Handles form submission, calls the FastAPI back‑end, and updates the page. */
+
+   const form      = document.getElementById('job-form');
+   const resultBox = document.getElementById('result');
+   const errBox    = document.getElementById('error');
+   const submitBtn = document.getElementById('submit-btn');
+   
+   // back‑end base URL – change if FastAPI isn’t on localhost:8000
+   const API_BASE = 'http://localhost:8000';
+   
+   form.addEventListener('submit', async (e) => {
+     e.preventDefault();
+     errBox.hidden    = true;
+     resultBox.hidden = true;
+     submitBtn.disabled = true;
+     submitBtn.textContent = 'Scoring…';
+   
+     try {
+       // ── collect fields ──────────────────────────────────────────
+       const data = new FormData(form);
+       // add the selected PDF files
+       const files = document.getElementById('resumes').files;
+       for (const f of files) data.append('resumes', f);
+   
+       // ── POST to back‑end ───────────────────────────────────────
+       const resp = await fetch(`${API_BASE}/api/match`, {
+         method: 'POST',
+         body: data,
+       });
+   
+       if (!resp.ok) {
+         throw new Error(`Server error ${resp.status}: ${await resp.text()}`);
+       }
+       const result = await resp.json();
+   
+       // ── render results ─────────────────────────────────────────
+       document.getElementById('result-candidate').textContent = result.candidate;
+       document.getElementById('result-score').textContent     = result.score;
+       document.getElementById('result-reason').textContent    = result.reason;
+       const link = document.getElementById('result-resume-link');
+       link.textContent = `Download ${result.resumeName}`;
+       link.href        = `${API_BASE}${result.resumeUrl}`;
+   
+       resultBox.hidden = false;
+     } catch (err) {
+       errBox.textContent = err.message;
+       errBox.hidden = false;
+     } finally {
+       submitBtn.disabled = false;
+       submitBtn.textContent = 'Find Best Match';
+     }
+   });
+   

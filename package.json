@@ -1,0 +1,14 @@
+{
+    "name": "job‑matcher‑stack",
+    "private": true,
+    "scripts": {
+      "dev:api": "cd Back-End && uvicorn main:app --reload --port 8000",
+      "dev:ui":  "cd Front-End && npx live-server --port=5500 --no-browser --quiet",
+      "start":   "concurrently -k \"npm:dev:*\""
+    },
+    "devDependencies": {
+      "concurrently": "^8.2.2",
+      "live-server":  "^1.2.2"
+    }
+  }
+  
